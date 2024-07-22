@@ -9,4 +9,5 @@ Because I'm better at coding than doing UI Design, so copying the UI from Window
 ### Special Thanks
 
 [ShizukuIchi's WinXP](https://github.com/ShizukuIchi/winXP) for a lot of cool CSS tricks that I used in this project.
+
 [XP.css](https://botoxparty.github.io/XP.css/) helped me with a few small CSS things.
