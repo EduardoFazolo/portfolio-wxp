@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.txt-shadow {
+  text-shadow: 1px 1px #0f1089;
+}
+
+.win-xp-border {
+  box-shadow:
+    inset -1px -1px #00138c,
+    inset 1px 1px #0831d9,
+    inset -2px -2px #001ea0,
+    inset 2px 2px #166aee,
+    inset -3px -3px #003bda,
+    inset 3px 3px #0855dd;
+}
+
+.btn-explorer {
+  @apply flex h-[34px] cursor-default select-none items-center rounded-[3px] border border-transparent text-[11px];
+  span {
+    @apply pointer-events-none mr-[4px];
+  }
+}
+
+.btn-explorer:hover {
+  @apply border border-black border-opacity-10 shadow-[0_-1px_1px_inset_rgba(0,0,0,0.1)] active:bg-[#dedede] active:text-white active:text-opacity-70 active:shadow-[0_-1px_1px_inset_rgba(255,255,255,0.7)];
+
+  :active {
+    @apply border border-black border-opacity-10 shadow-[0_-1px_1px_inset_rgba(255,255,255,0.7)];
+  }
+}
+
+.btn-explorer:disabled {
+  @apply pointer-events-none opacity-70 grayscale;
+}
+
+.btn-explorer-icon {
+  @apply pointer-events-none group-active:translate-x-px group-active:translate-y-px;
+}
+
+.arrow-down-xp {
+  @apply mx-1 flex h-full content-center items-center border-none before:block before:border-[3px] before:border-b-0 before:border-y-black before:content-[''];
+}
+
+.separator-y {
+  @apply mx-[2px] h-[90%] w-[1px] bg-black bg-opacity-20;
+}
