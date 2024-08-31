@@ -10,7 +10,7 @@ import { useAppsManager } from "~/hooks/useAppsManager";
 interface App {
 	name: string;
 	icon: string;
-	processId: string;
+	processSlug: string;
 }
 
 export default function HomePage() {
@@ -18,7 +18,7 @@ export default function HomePage() {
 		{
 			name: "My Documents",
 			icon: "/img/ui/folder-xp.png",
-			processId: "my-documents",
+			processSlug: "my-documents",
 		},
 	]);
 	const { openApp, apps: openApps } = useAppsManager();
@@ -26,9 +26,9 @@ export default function HomePage() {
 	return (
 		<main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden">
 			<Desktop>
-				{apps.map((app) => (
+				{apps.map((app, index) => (
 					<div
-						key={app.processId}
+						key={app.processSlug + index}
 						className="group flex cursor-default select-none flex-col items-center"
 						onClick={(e) => {
 							e.currentTarget.focus();
@@ -57,9 +57,9 @@ export default function HomePage() {
 
 			<div className="h-10 w-full bg-[url('/img/ui/taskbar.png')]" />
 
-			{openApps.map((app, index) => (
+			{openApps.map((app) => (
 				<Window
-					key={index}
+					key={"w-" + app.processId}
 					processId={app.processId}
 					title={app.name}
 					initialPosition={{ x: 100, y: 100 }}

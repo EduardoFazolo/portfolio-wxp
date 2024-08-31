@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 type AppState = {
 	apps: App[];
-	openApp: (app: App) => void;
+	openApp: (app: NewApp) => void;
 	closeApp: (processId: string) => void;
 };
 
@@ -12,12 +12,18 @@ type App = {
 	processId: string;
 };
 
+type NewApp = {
+	name: string;
+	icon: string;
+	processSlug: string;
+};
+
 export const useAppsManager = create<AppState>((set) => ({
 	apps: [],
-	openApp: (app: App) => {
+	openApp: (app: NewApp) => {
 		const newApp = {
 			...app,
-			processId: `${app.processId}-${Math.random().toString(36).slice(2)}`,
+			processId: `${app.processSlug}-${Math.random().toString(36).slice(2)}`,
 		};
 		return set((state) => ({ apps: [...state.apps, newApp] }));
 	},
