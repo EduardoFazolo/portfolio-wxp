@@ -1,4 +1,4 @@
-import { useState, type RefObject } from "react";
+import { useEffect, useState, type RefObject } from "react";
 
 export const useResizable = (
 	ref: RefObject<HTMLElement>,

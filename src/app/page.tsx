@@ -12,9 +12,6 @@ export default function HomePage() {
 				<MyDocuments />
 				<ContactMe />
 				<InternetExplorer />
-				<InternetExplorer />
-				<InternetExplorer />
-				<InternetExplorer />
 			</div>
 		</main>
 	);

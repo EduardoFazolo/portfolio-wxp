@@ -1,15 +1,42 @@
 "use client";
-import React from "react";
 import Image from "next/image";
+import React from "react";
+import { cn } from "~/utils";
 
-export const TitleBar = ({ children }: { children: React.ReactNode }) => {
+export const TitleBar = ({
+	isFocused,
+	children,
+}: {
+	isFocused: boolean;
+	children: React.ReactNode;
+}) => {
 	return (
-		<div className="txt-shadow items-ceter flex h-[28px] items-center justify-between rounded-tl-[8px] rounded-tr-[7px] border border-b-0 border-l-[#0831d9] border-r-[#001ea0] border-t-[#0831d9] bg-win-xp-blue py-[3px] pl-[3px] pr-[5px] text-[12px] text-white">
+		<div
+			className={cn(
+				"txt-shadow items-ceter flex h-[28px] items-center justify-between rounded-tl-[8px] rounded-tr-[7px] py-[3px] pl-[3px] pr-[5px] text-[12px] text-white",
+				isFocused ? "bg-win-xp-blue" : "bg-win-xp-blue-unfocused",
+			)}
+		>
 			<span>{children}</span>
 			<div className="flex gap-[1px]">
-				<button className="bg-win-control-blue h-[20px] w-[20px] cursor-default rounded-[3px] border border-white shadow-[0_-1px_2px_inset_rgb(70,70,255)] hover:brightness-125"></button>
-				<button className="bg-win-control-blue h-[20px] w-[20px] cursor-default rounded-[3px] border border-white shadow-[0_-1px_2px_inset_rgb(70,70,255)] hover:brightness-125"></button>
-				<button className="bg-win-control-red h-[20px] w-[20px] cursor-default rounded-[3px] border border-white shadow-[0_-1px_2px_inset_rgb(218,70,0)] hover:brightness-125"></button>
+				<button
+					className={cn(
+						"win-xp-minimize-button",
+						!isFocused && "opacity-80",
+					)}
+				/>
+				<button
+					className={cn(
+						"win-xp-maximize-button",
+						!isFocused && "opacity-80",
+					)}
+				/>
+				<button
+					className={cn(
+						"win-xp-close-button",
+						!isFocused && "opacity-80",
+					)}
+				/>
 			</div>
 		</div>
 	);

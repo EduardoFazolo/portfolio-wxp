@@ -3,6 +3,7 @@ import { useDraggable } from "../hooks/useDraggable";
 import { useResizable } from "../hooks/useResizable";
 import { useFocusable } from "../hooks/useFocusable";
 import { TitleBar, OptionsMenu, WindowFolderToolbar } from "./WindowLayout";
+import { cn } from "~/utils";
 
 export const Window = ({
 	children,
@@ -28,13 +29,16 @@ export const Window = ({
 		ref,
 		initialSize ?? { width: 700, height: 500 },
 	);
-	const { zIndex, focus } = useFocusable(windowId);
+	const { isFocused, zIndex, focus } = useFocusable(windowId);
 
 	return (
 		<div
 			id={windowId}
 			ref={ref}
-			className="absolute h-full w-full select-none rounded-tl-[8px] rounded-tr-[8px] bg-hard-blue p-[3px]"
+			className={cn(
+				"absolute h-full w-full select-none rounded-tl-[8px] rounded-tr-[8px] p-[3px]",
+				isFocused ? "bg-hard-blue" : "bg-win-xp-blue-unfocused",
+			)}
 			style={{
 				width: size.width,
 				height: size.height,
@@ -48,7 +52,7 @@ export const Window = ({
 				onMouseDown={startDragging}
 				className="absolute left-0 top-0 w-full"
 			>
-				<TitleBar>{title}</TitleBar>
+				<TitleBar isFocused={isFocused}>{title}</TitleBar>
 			</div>
 			<div className="mt-[25px] bg-win-xp-white">
 				<OptionsMenu

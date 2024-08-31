@@ -7,6 +7,7 @@ type WindowState = {
 
 type WindowManagerState = {
 	windows: WindowState[];
+	focusedWindowId: string | null;
 	focusWindow: (processId: string) => void;
 	registerWindow: (processId: string) => void;
 	unregisterWindow: (processId: string) => void;
@@ -14,6 +15,7 @@ type WindowManagerState = {
 
 export const useWindowManager = create<WindowManagerState>((set) => ({
 	windows: [],
+	focusedWindowId: null,
 	focusWindow: (processId: string) =>
 		set((state) => {
 			const newWindows = state.windows
@@ -26,7 +28,8 @@ export const useWindowManager = create<WindowManagerState>((set) => ({
 				}))
 				.sort((a, b) => a.zIndex - b.zIndex)
 				.map((w, index) => ({ ...w, zIndex: index + 1 }));
-			return { windows: newWindows };
+
+			return { windows: newWindows, focusedWindowId: processId };
 		}),
 	registerWindow: (processId: string) =>
 		set((state) => ({

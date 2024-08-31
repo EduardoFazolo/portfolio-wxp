@@ -2,8 +2,13 @@ import { useEffect } from "react";
 import { useWindowManager } from "./useWindowManager";
 
 export const useFocusable = (processId: string) => {
-	const { windows, focusWindow, registerWindow, unregisterWindow } =
-		useWindowManager();
+	const {
+		windows,
+		focusWindow,
+		registerWindow,
+		unregisterWindow,
+		focusedWindowId,
+	} = useWindowManager();
 
 	useEffect(() => {
 		registerWindow(processId);
@@ -11,7 +16,8 @@ export const useFocusable = (processId: string) => {
 	}, [processId, registerWindow, unregisterWindow]);
 
 	const focus = () => focusWindow(processId);
+
 	const zIndex = windows.find((w) => w.processId === processId)?.zIndex ?? 1;
 
-	return { zIndex, focus };
+	return { isFocused: focusedWindowId === processId, zIndex, focus };
 };
