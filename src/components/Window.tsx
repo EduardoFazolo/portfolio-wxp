@@ -18,22 +18,17 @@ export const Window = ({
 	initialSize?: { width: number; height: number };
 	title?: string;
 }) => {
-	const windowId = useMemo(
-		() => `${processId}-${Math.random().toString(36).slice(2)}`,
-		[processId],
-	);
-
 	const ref = useRef<HTMLDivElement>(null);
 	const { position, startDragging } = useDraggable(ref, initialPosition);
 	const { size } = useResizable(
 		ref,
 		initialSize ?? { width: 700, height: 500 },
 	);
-	const { isFocused, zIndex, focus } = useFocusable(windowId);
+	const { isFocused, zIndex, focus } = useFocusable(processId);
 
 	return (
 		<div
-			id={windowId}
+			id={processId}
 			ref={ref}
 			className={cn(
 				"absolute h-full w-full select-none rounded-tl-[8px] rounded-tr-[8px] p-[3px]",
@@ -52,7 +47,9 @@ export const Window = ({
 				onMouseDown={startDragging}
 				className="absolute left-0 top-0 w-full"
 			>
-				<TitleBar isFocused={isFocused}>{title}</TitleBar>
+				<TitleBar isFocused={isFocused} windowId={processId}>
+					{title} {processId}
+				</TitleBar>
 			</div>
 			<div className="mt-[25px] bg-win-xp-white">
 				<OptionsMenu

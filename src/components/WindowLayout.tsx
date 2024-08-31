@@ -1,21 +1,31 @@
 "use client";
 import Image from "next/image";
 import React from "react";
+import { useAppsManager } from "~/hooks/useAppsManager";
+import { useWindowManager } from "~/hooks/useWindowManager";
 import { cn } from "~/utils";
 
 export const TitleBar = ({
 	isFocused,
+	windowId,
 	children,
 }: {
 	isFocused: boolean;
+	windowId: string;
 	children: React.ReactNode;
 }) => {
+	const { closeApp } = useAppsManager();
+	const { focusWindow } = useWindowManager();
+
 	return (
 		<div
 			className={cn(
 				"txt-shadow items-ceter flex h-[28px] items-center justify-between rounded-tl-[8px] rounded-tr-[7px] py-[3px] pl-[3px] pr-[5px] text-[12px] text-white",
 				isFocused ? "bg-win-xp-blue" : "bg-win-xp-blue-unfocused",
 			)}
+			onClick={() => {
+				focusWindow(windowId);
+			}}
 		>
 			<span>{children}</span>
 			<div className="flex gap-[1px]">
@@ -36,6 +46,10 @@ export const TitleBar = ({
 						"win-xp-close-button",
 						!isFocused && "opacity-80",
 					)}
+					onClick={() => {
+						focusWindow(windowId);
+						closeApp(windowId);
+					}}
 				/>
 			</div>
 		</div>
