@@ -58,7 +58,7 @@ export default function HomePage() {
 				<Window
 					key={"w-" + app.processId}
 					processId={app.processId}
-					title={app.name}
+					title={app.name + " - " + app.processId}
 					initialPosition={{ x: 100, y: 100 }}
 					initialSize={{ width: 700, height: 500 }}
 				>

@@ -5,6 +5,7 @@ type App = {
 	icon: string;
 	processId: string;
 	zIndex: number;
+	order: number;
 };
 
 type NewApp = {
@@ -32,6 +33,7 @@ export const useProcessManager = create<ProcessManagerState>((set) => ({
 				name: app.name,
 				processId: `${app.processSlug}-${Math.random().toString(36).slice(2)}`,
 				zIndex: state.apps.length + 1,
+				order: state.apps.length,
 			};
 			return {
 				apps: [...state.apps, newApp],
@@ -56,7 +58,7 @@ export const useProcessManager = create<ProcessManagerState>((set) => ({
 					zIndex:
 						app.processId === processId
 							? state.apps.length
-							: app.zIndex,
+							: app.zIndex - 1,
 				}))
 				.sort((a, b) => a.zIndex - b.zIndex)
 				.map((app, index) => ({ ...app, zIndex: index + 1 }));

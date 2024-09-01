@@ -48,7 +48,7 @@ export const Window = ({
 				className="absolute left-0 top-0 w-full"
 			>
 				<TitleBar isFocused={isFocused} windowId={processId}>
-					{title} {processId}
+					{title}
 				</TitleBar>
 			</div>
 			<div className="mt-[25px] bg-win-xp-white">
