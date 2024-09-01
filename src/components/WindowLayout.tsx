@@ -31,7 +31,7 @@ export const TitleBar = ({
 				focusApp(windowId);
 			}}
 		>
-			<span>{children}</span>
+			<span className="line-clamp-1">{children}</span>
 			<div className="flex gap-[1px]">
 				<button
 					className={cn(

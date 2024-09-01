@@ -35,6 +35,12 @@ export default function HomePage() {
 						onDoubleClick={() => {
 							openApp(app);
 						}}
+						onTouchStart={(e) => {
+							// On double tap hack lol
+							if (e.currentTarget === document.activeElement) {
+								openApp(app);
+							} else e.currentTarget.focus();
+						}}
 						tabIndex={0}
 					>
 						<div className="relative h-[40px] w-[40px] group-focus:drop-shadow-[blue_0px_0px]">
@@ -60,7 +66,6 @@ export default function HomePage() {
 					processId={app.processId}
 					title={app.name + " - " + app.processId}
 					initialPosition={{ x: 100, y: 100 }}
-					initialSize={{ width: 700, height: 500 }}
 				>
 					<div className="flex h-full w-full">My Documents</div>
 				</Window>

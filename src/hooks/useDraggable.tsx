@@ -1,38 +1,56 @@
 import { useState, useEffect, RefObject } from "react";
 
+interface Position {
+	x: number;
+	y: number;
+}
+
 export const useDraggable = (
 	ref: RefObject<HTMLElement>,
-	initialPosition?: { x: number; y: number },
+	initialPosition?: Position,
 ) => {
-	const [isDragging, setIsDragging] = useState(false);
-	const [position, setPosition] = useState(initialPosition ?? { x: 0, y: 0 });
-	const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+	const [position, setPosition] = useState<Position>(
+		initialPosition ?? { x: 0, y: 0 },
+	);
 
-	useEffect(() => {
-		const handleMouseMove = (e: MouseEvent) => {
-			if (!isDragging) return;
-			const dx = e.clientX - dragStart.x;
-			const dy = e.clientY - dragStart.y;
-			setPosition({ x: position.x + dx, y: position.y + dy });
-			setDragStart({ x: e.clientX, y: e.clientY });
+	const startDragging = (
+		clientX: number,
+		clientY: number,
+		initialX?: number,
+		initialY?: number,
+	) => {
+		const startX = clientX - (initialX ?? position.x);
+		const startY = clientY - (initialY ?? position.y);
+
+		const handleMove = (moveClientX: number, moveClientY: number) => {
+			setPosition({
+				x: moveClientX - startX,
+				y: moveClientY - startY,
+			});
 		};
 
-		const handleMouseUp = () => setIsDragging(false);
-
-		if (isDragging) {
-			window.addEventListener("mousemove", handleMouseMove);
-			window.addEventListener("mouseup", handleMouseUp);
-		}
-
-		return () => {
-			window.removeEventListener("mousemove", handleMouseMove);
-			window.removeEventListener("mouseup", handleMouseUp);
+		const handleEnd = () => {
+			document.removeEventListener("mousemove", handleMouseMove);
+			document.removeEventListener("touchmove", handleTouchMove);
+			document.removeEventListener("mouseup", handleEnd);
+			document.removeEventListener("touchend", handleEnd);
 		};
-	}, [isDragging, dragStart, position]);
 
-	const startDragging = (e: React.MouseEvent) => {
-		setIsDragging(true);
-		setDragStart({ x: e.clientX, y: e.clientY });
+		const handleMouseMove = (e: MouseEvent) =>
+			handleMove(e.clientX, e.clientY);
+		const handleTouchMove = (e: TouchEvent) => {
+			if (e.touches.length > 0 && e.touches[0]) {
+				e.preventDefault();
+				handleMove(e.touches[0].clientX, e.touches[0].clientY);
+			}
+		};
+
+		document.addEventListener("mousemove", handleMouseMove);
+		document.addEventListener("touchmove", handleTouchMove, {
+			passive: false,
+		});
+		document.addEventListener("mouseup", handleEnd);
+		document.addEventListener("touchend", handleEnd);
 	};
 
 	return { position, setPosition, startDragging };

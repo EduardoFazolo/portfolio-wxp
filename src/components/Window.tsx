@@ -33,8 +33,51 @@ export const Window = ({
 		isMaximized,
 		setIsMaximized,
 		setIsMinimized,
-	} = useResizable(ref, initialSize ?? { width: 700, height: 500 });
+	} = useResizable(
+		ref,
+		initialSize ?? {
+			width: window.outerWidth / 1.5,
+			height: window.outerHeight / 2,
+		},
+	);
+
 	const { isFocused, zIndex, focus } = useFocusable(processId);
+
+	const handleStartDragging = (e: React.MouseEvent | React.TouchEvent) => {
+		let clientX: number;
+		let clientY: number;
+
+		if ("touches" in e && e.touches[0]) {
+			clientX = e.touches[0].clientX;
+			clientY = e.touches[0].clientY;
+		} else if ("clientX" in e) {
+			clientX = e.clientX;
+			clientY = e.clientY;
+		} else {
+			return; // Exit if we can't get client coordinates
+		}
+
+		if (isMaximized) {
+			// Calculate the ratio of where the user clicked on the maximized window
+			const ratioX = clientX / window.innerWidth;
+			const ratioY = clientY / window.innerHeight;
+
+			// Calculate the new position based on the click ratio and previous size
+			const newX = clientX - previousSize.width * ratioX;
+			const newY = clientY - 28 / 2; // Assuming 28px is the height of the title bar
+
+			// Set the new position and size
+			setPosition({ x: newX, y: newY });
+			setSize(previousSize);
+			setIsMaximized(false);
+
+			// Start dragging from the new position
+			startDragging(clientX, clientY, newX, newY);
+		} else {
+			// If not maximized, just start dragging from current position
+			startDragging(clientX, clientY, position.x, position.y);
+		}
+	};
 
 	return (
 		<div
@@ -50,14 +93,14 @@ export const Window = ({
 				left: isMaximized ? 0 : position.x,
 				top: isMaximized ? 0 : position.y,
 				zIndex: zIndex,
+				touchAction: "none",
 			}}
 			onMouseDown={focus}
+			onTouchStart={focus}
 		>
 			<div
-				onMouseDown={(e) => {
-					setIsMaximized(false);
-					startDragging(e);
-				}}
+				onMouseDown={handleStartDragging}
+				onTouchStart={handleStartDragging}
 				className="absolute left-0 top-0 w-full"
 			>
 				<TitleBar
@@ -69,7 +112,7 @@ export const Window = ({
 						} else {
 							setPosition({
 								x: previousPosition.x,
-								y: window.innerHeight - 200,
+								y: previousPosition.y,
 							});
 							setSize(previousSize);
 							setIsMaximized(false);
