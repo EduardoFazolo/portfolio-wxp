@@ -4,6 +4,7 @@ import { useDraggable } from "../hooks/useDraggable";
 import { useFocusable } from "../hooks/useFocusable";
 import { useResizable } from "../hooks/useResizable";
 import { OptionsMenu, TitleBar, WindowFolderToolbar } from "./WindowLayout";
+import { useProcessManager } from "~/hooks/useProcessManager";
 
 export const Window = ({
 	children,
@@ -19,11 +20,20 @@ export const Window = ({
 	title?: string;
 }) => {
 	const ref = useRef<HTMLDivElement>(null);
-	const { position, startDragging } = useDraggable(ref, initialPosition);
-	const { size } = useResizable(
+	const { position, startDragging, setPosition } = useDraggable(
 		ref,
-		initialSize ?? { width: 700, height: 500 },
+		initialPosition,
 	);
+	const {
+		size,
+		setSize,
+		handleMaximize,
+		previousPosition,
+		previousSize,
+		isMaximized,
+		setIsMaximized,
+		setIsMinimized,
+	} = useResizable(ref, initialSize ?? { width: 700, height: 500 });
 	const { isFocused, zIndex, focus } = useFocusable(processId);
 
 	return (
@@ -35,19 +45,42 @@ export const Window = ({
 				isFocused ? "bg-hard-blue" : "bg-win-xp-blue-unfocused",
 			)}
 			style={{
-				width: size.width,
-				height: size.height,
-				left: position.x,
-				top: position.y,
+				width: isMaximized ? window.innerWidth : size.width,
+				height: isMaximized ? window.innerHeight : size.height - 28,
+				left: isMaximized ? 0 : position.x,
+				top: isMaximized ? 0 : position.y,
 				zIndex: zIndex,
 			}}
 			onMouseDown={focus}
 		>
 			<div
-				onMouseDown={startDragging}
+				onMouseDown={(e) => {
+					setIsMaximized(false);
+					startDragging(e);
+				}}
 				className="absolute left-0 top-0 w-full"
 			>
-				<TitleBar isFocused={isFocused} windowId={processId}>
+				<TitleBar
+					isFocused={isFocused}
+					windowId={processId}
+					handleMaxmizeOrNot={() => {
+						if (!isMaximized) {
+							handleMaximize(position);
+						} else {
+							setPosition({
+								x: previousPosition.x,
+								y: window.innerHeight - 200,
+							});
+							setSize(previousSize);
+							setIsMaximized(false);
+						}
+					}}
+					onMinimize={() => {
+						// TODO: needs to implement logic
+						setIsMinimized(true);
+					}}
+					isMaximized={isMaximized}
+				>
 					{title}
 				</TitleBar>
 			</div>

@@ -35,5 +35,5 @@ export const useDraggable = (
 		setDragStart({ x: e.clientX, y: e.clientY });
 	};
 
-	return { position, startDragging };
+	return { position, setPosition, startDragging };
 };

@@ -7,10 +7,16 @@ import { cn } from "~/utils";
 export const TitleBar = ({
 	isFocused,
 	windowId,
+	handleMaxmizeOrNot,
+	onMinimize,
+	isMaximized,
 	children,
 }: {
 	isFocused: boolean;
 	windowId: string;
+	handleMaxmizeOrNot: () => void;
+	onMinimize: () => void;
+	isMaximized: boolean;
 	children: React.ReactNode;
 }) => {
 	const { closeApp, focusApp } = useProcessManager();
@@ -32,12 +38,21 @@ export const TitleBar = ({
 						"win-xp-minimize-button",
 						!isFocused && "opacity-80",
 					)}
+					onClick={() => {
+						onMinimize();
+					}}
 				/>
 				<button
 					className={cn(
-						"win-xp-maximize-button",
 						!isFocused && "opacity-80",
+						isMaximized
+							? "win-xp-minmax-button"
+							: "win-xp-maximize-button",
 					)}
+					onClick={() => {
+						focusApp(windowId);
+						handleMaxmizeOrNot();
+					}}
 				/>
 				<button
 					className={cn(
