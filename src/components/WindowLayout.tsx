@@ -1,8 +1,7 @@
 "use client";
 import Image from "next/image";
 import React from "react";
-import { useAppsManager } from "~/hooks/useAppsManager";
-import { useWindowManager } from "~/hooks/useWindowManager";
+import { useProcessManager } from "~/hooks/useProcessManager";
 import { cn } from "~/utils";
 
 export const TitleBar = ({
@@ -14,8 +13,7 @@ export const TitleBar = ({
 	windowId: string;
 	children: React.ReactNode;
 }) => {
-	const { closeApp } = useAppsManager();
-	const { focusWindow } = useWindowManager();
+	const { closeApp, focusApp } = useProcessManager();
 
 	return (
 		<div
@@ -24,7 +22,7 @@ export const TitleBar = ({
 				isFocused ? "bg-win-xp-blue" : "bg-win-xp-blue-unfocused",
 			)}
 			onClick={() => {
-				focusWindow(windowId);
+				focusApp(windowId);
 			}}
 		>
 			<span>{children}</span>
@@ -47,7 +45,7 @@ export const TitleBar = ({
 						!isFocused && "opacity-80",
 					)}
 					onClick={() => {
-						focusWindow(windowId);
+						focusApp(windowId);
 						closeApp(windowId);
 					}}
 				/>

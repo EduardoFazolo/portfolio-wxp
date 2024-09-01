@@ -1,11 +1,10 @@
 "use client";
-import { type ReactNode, useState } from "react";
-import { Desktop } from "~/components/Desktop";
-import { MyDocuments } from "~/program-windows/MyDocuments";
-import { ContactMe, InternetExplorer } from "~/program-windows/Others";
 import Image from "next/image";
+import { useState } from "react";
+import { Desktop } from "~/components/Desktop";
+import { Taskbar } from "~/components/Taskbar";
 import { Window } from "~/components/Window";
-import { useAppsManager } from "~/hooks/useAppsManager";
+import { useProcessManager } from "~/hooks/useProcessManager";
 
 interface App {
 	name: string;
@@ -21,7 +20,7 @@ export default function HomePage() {
 			processSlug: "my-documents",
 		},
 	]);
-	const { openApp, apps: openApps } = useAppsManager();
+	const { openApp, apps: openApps } = useProcessManager();
 
 	return (
 		<main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden">
@@ -55,8 +54,6 @@ export default function HomePage() {
 				))}
 			</Desktop>
 
-			<div className="h-10 w-full bg-[url('/img/ui/taskbar.png')]" />
-
 			{openApps.map((app) => (
 				<Window
 					key={"w-" + app.processId}
@@ -73,6 +70,8 @@ export default function HomePage() {
 			<InternetExplorer /> */}
 			{/* <div className="absolute left-0 top-0 h-full w-full">
 			</div> */}
+			{/* <div className="h-10 w-full bg-[url('/img/ui/taskbar.png')]" /> */}
+			<Taskbar />
 		</main>
 	);
 }

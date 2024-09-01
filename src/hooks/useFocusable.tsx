@@ -1,23 +1,15 @@
-import { useEffect } from "react";
-import { useWindowManager } from "./useWindowManager";
+import { useProcessManager } from "./useProcessManager";
 
 export const useFocusable = (processId: string) => {
-	const {
-		windows,
-		focusWindow,
-		registerWindow,
-		unregisterWindow,
-		focusedWindowId,
-	} = useWindowManager();
+	const { apps, focusApp, focusedProcessId } = useProcessManager();
 
-	useEffect(() => {
-		registerWindow(processId);
-		return () => unregisterWindow(processId);
-	}, [processId, registerWindow, unregisterWindow]);
+	const focus = () => focusApp(processId);
 
-	const focus = () => focusWindow(processId);
+	const zIndex = apps.find((app) => app.processId === processId)?.zIndex ?? 1;
 
-	const zIndex = windows.find((w) => w.processId === processId)?.zIndex ?? 1;
-
-	return { isFocused: focusedWindowId === processId, zIndex, focus };
+	return {
+		isFocused: focusedProcessId === processId,
+		zIndex,
+		focus,
+	};
 };

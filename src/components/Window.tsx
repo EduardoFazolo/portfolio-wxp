@@ -1,9 +1,9 @@
-import React, { useMemo, useRef } from "react";
-import { useDraggable } from "../hooks/useDraggable";
-import { useResizable } from "../hooks/useResizable";
-import { useFocusable } from "../hooks/useFocusable";
-import { TitleBar, OptionsMenu, WindowFolderToolbar } from "./WindowLayout";
+import React, { useRef } from "react";
 import { cn } from "~/utils";
+import { useDraggable } from "../hooks/useDraggable";
+import { useFocusable } from "../hooks/useFocusable";
+import { useResizable } from "../hooks/useResizable";
+import { OptionsMenu, TitleBar, WindowFolderToolbar } from "./WindowLayout";
 
 export const Window = ({
 	children,
