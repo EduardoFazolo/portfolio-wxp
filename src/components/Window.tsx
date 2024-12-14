@@ -33,15 +33,16 @@ export const Window = ({
 		isMaximized,
 		setIsMaximized,
 		setIsMinimized,
+		isMinimized,
 	} = useResizable(
 		ref,
 		initialSize ?? {
-			width: window.outerWidth / 1.5,
-			height: window.outerHeight / 2,
+			width: window.innerWidth * 0.8,
+			height: window.innerHeight / 2,
 		},
 	);
-
 	const { isFocused, zIndex, focus } = useFocusable(processId);
+	const { isAppMaximized } = useProcessManager();
 
 	const handleStartDragging = (e: React.MouseEvent | React.TouchEvent) => {
 		let clientX: number;
@@ -86,6 +87,7 @@ export const Window = ({
 			className={cn(
 				"absolute h-full w-full select-none rounded-tl-[8px] rounded-tr-[8px] p-[3px]",
 				isFocused ? "bg-hard-blue" : "bg-win-xp-blue-unfocused",
+				!isAppMaximized(processId) && "hidden",
 			)}
 			style={{
 				width: isMaximized ? window.innerWidth : size.width,
@@ -105,7 +107,7 @@ export const Window = ({
 			>
 				<TitleBar
 					isFocused={isFocused}
-					windowId={processId}
+					processId={processId}
 					handleMaxmizeOrNot={() => {
 						if (!isMaximized) {
 							handleMaximize(position);
@@ -118,11 +120,7 @@ export const Window = ({
 							setIsMaximized(false);
 						}
 					}}
-					onMinimize={() => {
-						// TODO: needs to implement logic
-						setIsMinimized(true);
-					}}
-					isMaximized={isMaximized}
+					isMaximized={isAppMaximized(processId)}
 				>
 					{title}
 				</TitleBar>

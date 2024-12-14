@@ -6,20 +6,18 @@ import { cn } from "~/utils";
 
 export const TitleBar = ({
 	isFocused,
-	windowId,
+	processId,
 	handleMaxmizeOrNot,
-	onMinimize,
 	isMaximized,
 	children,
 }: {
 	isFocused: boolean;
-	windowId: string;
+	processId: string;
 	handleMaxmizeOrNot: () => void;
-	onMinimize: () => void;
 	isMaximized: boolean;
 	children: React.ReactNode;
 }) => {
-	const { closeApp, focusApp } = useProcessManager();
+	const { closeApp, focusApp, minimizeApp } = useProcessManager();
 
 	return (
 		<div
@@ -27,8 +25,8 @@ export const TitleBar = ({
 				"txt-shadow items-ceter flex h-[28px] items-center justify-between rounded-tl-[8px] rounded-tr-[7px] py-[3px] pl-[3px] pr-[5px] text-[12px] text-white",
 				isFocused ? "bg-win-xp-blue" : "bg-win-xp-blue-unfocused",
 			)}
-			onClick={() => {
-				focusApp(windowId);
+			onMouseDown={() => {
+				focusApp(processId);
 			}}
 		>
 			<span className="line-clamp-1">{children}</span>
@@ -38,8 +36,8 @@ export const TitleBar = ({
 						"win-xp-minimize-button",
 						!isFocused && "opacity-80",
 					)}
-					onClick={() => {
-						onMinimize();
+					onMouseUp={() => {
+						minimizeApp(processId);
 					}}
 				/>
 				<button
@@ -49,8 +47,8 @@ export const TitleBar = ({
 							? "win-xp-minmax-button"
 							: "win-xp-maximize-button",
 					)}
-					onClick={() => {
-						focusApp(windowId);
+					onMouseDown={() => {
+						focusApp(processId);
 						handleMaxmizeOrNot();
 					}}
 				/>
@@ -60,8 +58,8 @@ export const TitleBar = ({
 						!isFocused && "opacity-80",
 					)}
 					onClick={() => {
-						focusApp(windowId);
-						closeApp(windowId);
+						focusApp(processId);
+						closeApp(processId);
 					}}
 				/>
 			</div>

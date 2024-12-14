@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Desktop } from "~/components/Desktop";
 import { Taskbar } from "~/components/Taskbar";
 import { Window } from "~/components/Window";
+import { useDoubleClick } from "~/hooks/useDoubleClick";
 import { useProcessManager } from "~/hooks/useProcessManager";
 
 interface App {
@@ -22,6 +23,19 @@ export default function HomePage() {
 	]);
 	const { openApp, apps: openApps } = useProcessManager();
 
+	const { handleClick, handleTouch } = useDoubleClick({
+		onSingleClick: (id) => {
+			document.getElementById(id)?.focus();
+		},
+		onDoubleClick: (id) => {
+			const app = apps.find((a) => a.processSlug === id);
+			if (app) {
+				openApp(app);
+				document.getElementById(id)?.blur();
+			}
+		},
+	});
+
 	return (
 		<main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden">
 			<Desktop>
@@ -29,17 +43,10 @@ export default function HomePage() {
 					<div
 						key={app.processSlug + index}
 						className="group flex cursor-default select-none flex-col items-center"
-						onClick={(e) => {
-							e.currentTarget.focus();
-						}}
-						onDoubleClick={() => {
-							openApp(app);
-						}}
+						onClick={() => handleClick(app.processSlug)}
 						onTouchStart={(e) => {
-							// On double tap hack lol
-							if (e.currentTarget === document.activeElement) {
-								openApp(app);
-							} else e.currentTarget.focus();
+							e.preventDefault();
+							handleTouch(app.processSlug, true);
 						}}
 						tabIndex={0}
 					>
@@ -50,7 +57,7 @@ export default function HomePage() {
 								height={40}
 								alt={"docs"}
 								onSelect={(e) => e.preventDefault()}
-								className="select-none group-focus:opacity-80"
+								className="pointer-events-none select-none group-focus:opacity-80"
 							/>
 						</div>
 						<p className="px-2 py-[1px] text-[12px] text-white [text-shadow:_1px_1px_1px_rgb(0_0_0_/_90%)] group-focus:bg-[#0b61ff] group-focus:[text-shadow:_0px_0px_0px_rgb(0_0_0_/_90%)]">
@@ -65,17 +72,11 @@ export default function HomePage() {
 					key={"w-" + app.processId}
 					processId={app.processId}
 					title={app.name + " - " + app.processId}
-					initialPosition={{ x: 100, y: 100 }}
+					initialPosition={{ x: 20, y: 120 }}
 				>
 					<div className="flex h-full w-full">My Documents</div>
 				</Window>
 			))}
-			{/* <MyDocuments />
-			<ContactMe />
-			<InternetExplorer /> */}
-			{/* <div className="absolute left-0 top-0 h-full w-full">
-			</div> */}
-			{/* <div className="h-10 w-full bg-[url('/img/ui/taskbar.png')]" /> */}
 			<Taskbar />
 		</main>
 	);

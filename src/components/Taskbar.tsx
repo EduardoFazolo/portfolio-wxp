@@ -8,7 +8,7 @@ export const Taskbar = () => {
 	const { apps, focusApp, focusedProcessId } = useProcessManager();
 
 	return (
-		<div className="bg-win-taskbar z-[999999999] h-8 w-full">
+		<div className="z-[999999999] h-8 w-full bg-win-taskbar">
 			<div className="flex h-full w-full items-center">
 				<Image
 					src="/img/ui/start-menu.png"
